@@ -7,6 +7,8 @@ public class Practice23 {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 
+		//리펙토링 : 결과의 변경 없이 코드 구조를 재조정
+		
 		Scanner scanner = new Scanner(System.in);
 
 		String[] menu = { null, "아메리카노", "카페라떼", "바닐라라떼" };
@@ -16,15 +18,18 @@ public class Practice23 {
 
 		while (true) { // 메뉴판 출력
 			System.out.println("======== 메뉴 ========");
-			System.out.println("1. 아메리카노	3500원");
-			System.out.println("2. 카페라떼	4100원");
-			System.out.println("3. 바닐라라떼	4300원");
+			for(int i=1; i<menu.length; i++) {
+				System.out.printf("%d. %s	%d원\n",i,menu[i],menuPrice[i]);
+			}
+//			System.out.println("1. 아메리카노	3500원");
+//			System.out.println("2. 카페라떼	4100원");
+//			System.out.println("3. 바닐라라떼	4300원");
 			System.out.println("=====================");
 
 			System.out.print("메뉴 선택 : ");
 			int menuNum = scanner.nextInt(); // 메뉴 입력
 
-			if (menuNum < 1 || menuNum > 3) { // 잘못된 메뉴 선택시 문구 출력 후 처음으로
+			if (menuNum < 1 || menuNum > menu.length-1) { // 잘못된 메뉴 선택시 문구 출력 후 처음으로
 				System.out.println("잘못 선택하셨습니다. 다시 선택해주세요.");
 				System.out.println();
 				continue; // while 처음으로
@@ -64,10 +69,10 @@ public class Practice23 {
 				System.out.println("총액 : " + total + "원"); // 총액 출력
 				break; // 반복문 종료
 
-			} else if (order.equals("y")) { // 추가 주문(y) 선택 시
-				System.out.println();
+			} 
+			System.out.println();
 
-			}
+			
 
 		}
 

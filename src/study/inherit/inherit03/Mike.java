@@ -1,6 +1,9 @@
 package study.inherit.inherit03;
 
+
+//모든 자바 클래스(객체)는 Object 클래스를 상속받는다
 public class Mike {
+			// extends Object
 	
 	String model;
 	int price;

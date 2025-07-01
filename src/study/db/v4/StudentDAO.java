@@ -1,0 +1,244 @@
+package study.db.v4;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Types;
+import java.util.ArrayList;
+import java.util.List;
+
+import study.db.v2.DBConnectionManager;
+
+public class StudentDAO {
+
+	// DB연결 및 사용시 필요한 객체
+	Connection conn = null; // DB 연결 객체
+	PreparedStatement psmt = null; // DB연결후, sql 명령 실행해주는 객체
+	ResultSet rs = null; // sql Select 실행 후 조회 결과가 저장되는 객체
+	
+	public StudentMypageDTO findStudentMypageInfoByStudno(int studno) {
+		conn = DBConnectionManager.connectDB();
+		// 쿼리 준비
+
+		String query = "select * "
+				+ " from student s, department d "
+				+ " where s.studno = ? "
+				+ " AND s.deptno1 = d.deptno ";
+
+		StudentMypageDTO s = null;
+
+		try {
+
+			psmt = conn.prepareStatement(query); // 쿼리실행 준비객체
+
+			psmt.setInt(1, studno);
+			rs = psmt.executeQuery(); // 쿼리 실행 후 결과 저장
+
+			// ResultSet rs 에 담겨져있는 쿼리 수행결과 확인
+			if (rs.next()) {
+
+				s = new StudentMypageDTO();
+						
+				
+				s.setStudno(rs.getInt("studno"));
+				s.setName(rs.getString("name"));
+				s.setId(rs.getString("id"));
+				s.setGrade(rs.getInt("grade"));
+				s.setJumin(rs.getString("jumin"));
+				
+				s.setBirthday( rs.getString("birthday"));
+				
+				s.setTel(rs.getString("tel"));
+				s.setHeight(rs.getInt("height"));
+				s.setWeight(rs.getInt("weight"));
+				s.setDeptno1(rs.getInt("deptno1"));
+				s.setDeptno2(rs.getInt("deptno2"));
+				s.setProfno(rs.getInt("profno"));
+
+				s.setDeptno(rs.getInt("deptno"));
+				s.setDname(rs.getString("dname"));
+				s.setPart(rs.getInt("part"));
+				s.setBuild(rs.getString("build"));
+			}
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		DBConnectionManager.disconnectDB(conn, psmt, rs);
+
+		return s;
+	}
+	
+	public StudentDTO findStudentByStudno(int studno) {
+		conn = DBConnectionManager.connectDB();
+		// 쿼리 준비
+
+		String query = "select studno, name, id, grade, jumin, TO_CHAR(birthday, 'YYYY-MM-DD') birthday, "
+				+ "tel, height, weight, deptno1, deptno2, "
+				+ "profno from student "
+				+ "where studno = ? ";
+
+		StudentDTO s = null;
+
+		try {
+
+			psmt = conn.prepareStatement(query); // 쿼리실행 준비객체
+
+			psmt.setInt(1, studno);
+			rs = psmt.executeQuery(); // 쿼리 실행 후 결과 저장
+
+			// ResultSet rs 에 담겨져있는 쿼리 수행결과 확인
+			if (rs.next()) {
+
+				s = new StudentDTO();
+						
+				
+				s.setStudno(rs.getInt("studno"));
+				s.setName(rs.getString("name"));
+				s.setId(rs.getString("id"));
+				s.setGrade(rs.getInt("grade"));
+				s.setJumin(rs.getString("jumin"));
+				
+				s.setBirthday( rs.getString("birthday"));
+				
+				s.setTel(rs.getString("tel"));
+				s.setHeight(rs.getInt("height"));
+				s.setWeight(rs.getInt("weight"));
+				s.setDeptno1(rs.getInt("deptno1"));
+				s.setDeptno2(rs.getInt("deptno2"));
+				s.setProfno(rs.getInt("profno"));
+
+			}
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		DBConnectionManager.disconnectDB(conn, psmt, rs);
+
+		return s;
+	}
+
+	public List<StudentDTO> findStudentList() {
+
+		conn = DBConnectionManager.connectDB();
+		// 쿼리 준비
+
+		String query = "select studno, name, id, grade, jumin, TO_CHAR(birthday, 'YYYY-MM-DD') birthday, tel, height, weight, deptno1, deptno2, profno from student";
+
+		List<StudentDTO> studentList = new ArrayList<StudentDTO>();
+
+		try {
+
+			psmt = conn.prepareStatement(query); // 쿼리실행 준비객체
+
+			rs = psmt.executeQuery(); // 쿼리 실행 후 결과 저장
+
+			// ResultSet rs 에 담겨져있는 쿼리 수행결과 확인
+			while (rs.next()) {
+
+				StudentDTO stud = new StudentDTO(rs.getInt("STUDNO"), rs.getString("NAME"), rs.getString("ID"),
+						rs.getInt("grade"), rs.getString("JUMIN"), rs.getString("BIRTHDAY"), rs.getString("TEL"),
+						rs.getInt("HEIGHT"), rs.getInt("WEIGHT"), rs.getInt("DEPTNO1"), rs.getInt("DEPTNO2"),
+						rs.getInt("PROFNO"));
+				studentList.add(stud);
+
+			}
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		DBConnectionManager.disconnectDB(conn, psmt, rs);
+
+		return studentList;
+	}
+
+	public List<StudentDTO> findStudentListByGrade(int grade) {
+
+		conn = DBConnectionManager.connectDB();
+		// 쿼리 준비
+
+		String query = "select studno, name, id, grade, jumin, TO_CHAR(birthday, 'YYYY-MM-DD') birthday, tel, height, weight, deptno1, deptno2, profno from student where grade = ? ";
+
+		List<StudentDTO> studentList = new ArrayList<StudentDTO>();
+
+		try {
+
+			psmt = conn.prepareStatement(query); // 쿼리실행 준비객체
+
+			// 파라미터 세팅
+			psmt.setInt(1, grade); // 쿼리에 있는 첫번째 ? 위치에 deptno 를 세팅하겠다
+
+			rs = psmt.executeQuery(); // 쿼리 실행 후 결과 저장
+
+			// ResultSet rs 에 담겨져있는 쿼리 수행결과 확인
+			while (rs.next()) {
+
+				StudentDTO stud = new StudentDTO(rs.getInt("STUDNO"), rs.getString("NAME"), rs.getString("ID"),
+						rs.getInt("grade"), rs.getString("JUMIN"), rs.getString("BIRTHDAY"), rs.getString("TEL"),
+						rs.getInt("HEIGHT"), rs.getInt("WEIGHT"), rs.getInt("DEPTNO1"), rs.getInt("DEPTNO2"),
+						rs.getInt("PROFNO"));
+				studentList.add(stud);
+
+			}
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		DBConnectionManager.disconnectDB(conn, psmt, rs);
+
+		return studentList;
+	}
+
+	public int saveStudent(StudentDTO student) {
+		conn = DBConnectionManager.connectDB();
+		// 쿼리 준비
+
+		String query = "insert into student values( ?, ?, ?, ?, ?, TO_DATE(?, 'YYYY-MM-DD'), ?, ?, ?, ?, ?, ?) ";
+
+		int result = 0;
+
+		try {
+			psmt = conn.prepareStatement(query); // 쿼리실행 준비객체
+
+			psmt.setInt(1, student.getStudno());
+			psmt.setString(2, student.getName());
+			psmt.setString(3, student.getId());
+			psmt.setInt(4, student.getGrade());
+			psmt.setString(5, student.getJumin());
+			
+			psmt.setString(6, student.getBirthday());
+			psmt.setString(7, student.getTel());
+			psmt.setInt(8, student.getHeight());
+			psmt.setInt(9, student.getWeight());
+			psmt.setInt(10, student.getDeptno1());
+			
+			//student.getDeptno2()	: null
+			//psmt.setInt(11, student.getDeptno2());
+			if(student.getDeptno2() == null)
+				psmt.setNull(11, Types.INTEGER);
+			else
+				psmt.setInt(11, student.getDeptno2());
+			
+			psmt.setInt(12, student.getProfno());
+
+			result = psmt.executeUpdate(); // 쿼리 실행 후 결과 저장
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		DBConnectionManager.disconnectDB(conn, psmt, rs);
+
+		return result;
+	}
+}

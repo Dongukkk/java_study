@@ -20,6 +20,17 @@ public class practice50 {
 		for (StudentDTO dp : dList2) {
 			System.out.println(dp);
 		}
+		
+		//practice51
+		System.out.println("=====새로운 데이터 입력=====");
+		StudentDTO saveS = new StudentDTO(9991, "name", "id", 1, 
+				"0005313234567", "2000-05-31", "02)1234-5678",
+				180, 75, 101, 201, 1001);
+		
+		int rs1 = studentDAO.saveStudent(saveS);
+		if(rs1 > 0) {
+			System.out.println("saveS 잘 저장됐다~~~");
+		}
 	}
 
 }
